@@ -1,0 +1,14 @@
+title = "Relay secret scanning configuration"
+
+[extend]
+useDefault = true
+
+# These are fixed, non-secret test peppers from the root commit. Keep the
+# allowlist exact so test directories remain fully scanned for real secrets.
+[allowlist]
+description = "Known deterministic test-only peppers"
+regexTarget = "match"
+regexes = [
+  '''integration-key-pepper-with-32-characters''',
+  '''api-integration-key-pepper-32-characters''',
+]
