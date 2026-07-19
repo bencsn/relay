@@ -1,0 +1,16 @@
+{
+  "name": "@relay/host",
+  "version": "0.1.0",
+  "description": "Outbound-only donor host agent for Relay",
+  "license": "Apache-2.0",
+  "type": "module",
+  "bin": {
+    "relay-host": "src/index.ts"
+  },
+  "dependencies": {
+    "@relay/protocol": "workspace:*",
+    "@relay/scheduler": "workspace:*",
+    "yaml": "^2.0.0",
+    "zod": "^4.0.0"
+  }
+}

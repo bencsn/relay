@@ -1,0 +1,47 @@
+{
+  "name": "relay-inference",
+  "version": "0.1.0",
+  "private": true,
+  "description": "A durable API for donated OpenAI-compatible inference capacity",
+  "license": "Apache-2.0",
+  "packageManager": "bun@1.3.14",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bencsn/relay.git"
+  },
+  "homepage": "https://github.com/bencsn/relay#readme",
+  "bugs": "https://github.com/bencsn/relay/issues",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "engines": {
+    "bun": ">=1.3.0"
+  },
+  "scripts": {
+    "dev": "bun --watch apps/api/src/index.ts",
+    "dev:host": "bun apps/host/src/index.ts start",
+    "migrate": "bun scripts/migrate.ts",
+    "bootstrap": "bun scripts/bootstrap.ts",
+    "key:create": "bun scripts/create-api-key.ts",
+    "account:status": "bun scripts/set-account-status.ts",
+    "demo": "bun scripts/demo.ts",
+    "mock:provider": "bun scripts/mock-provider.ts",
+    "test": "bun test",
+    "test:unit": "bun test packages apps/host/test",
+    "test:integration": "bun test apps/api/test packages/db/test",
+    "typecheck": "tsc --noEmit",
+    "lint": "biome check .",
+    "format": "biome format --write .",
+    "build": "bun build apps/api/src/index.ts --target=bun --outdir=dist/api && bun build apps/host/src/index.ts --target=bun --outdir=dist/host",
+    "build:host": "bun tooling/build-host.ts",
+    "secrets:check": "bun scripts/check-secrets.ts"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^2.0.0",
+    "@types/bun": "latest",
+    "@types/node": "latest",
+    "openai": "6.48.0",
+    "typescript": "^5.8.0"
+  }
+}

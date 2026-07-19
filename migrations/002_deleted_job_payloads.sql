@@ -1,0 +1,1 @@
+ALTER TABLE jobs ALTER COLUMN canonical_request DROP NOT NULL;

@@ -1,0 +1,12 @@
+{
+  "name": "@relay/db",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": "./src/index.ts",
+  "dependencies": {
+    "@relay/protocol": "workspace:*",
+    "@relay/scheduler": "workspace:*",
+    "postgres": "^3.0.0"
+  }
+}

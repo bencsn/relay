@@ -1,0 +1,27 @@
+# Dependencies and builds
+node_modules/
+dist/
+coverage/
+*.tsbuildinfo
+
+# Local secrets and configuration
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+credentials.json
+secrets.json
+.relay/
+
+# Runtime data and logs
+*.log
+*.pid
+tmp/
+.DS_Store
+
+# Editors
+.idea/
+.vscode/

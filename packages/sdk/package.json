@@ -1,0 +1,11 @@
+{
+  "name": "@relay/sdk",
+  "version": "0.1.0",
+  "private": false,
+  "type": "module",
+  "license": "Apache-2.0",
+  "exports": "./src/index.ts",
+  "dependencies": {
+    "@relay/protocol": "workspace:*"
+  }
+}

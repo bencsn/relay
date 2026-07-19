@@ -1,0 +1,28 @@
+{
+  "compilerOptions": {
+    "target": "ES2023",
+    "lib": ["ES2023", "DOM", "DOM.Iterable"],
+    "module": "Preserve",
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "verbatimModuleSyntax": true,
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitOverride": true,
+    "skipLibCheck": true,
+    "types": ["bun", "node"],
+    "baseUrl": ".",
+    "paths": {
+      "@relay/config": ["packages/config/src/index.ts"],
+      "@relay/db": ["packages/db/src/index.ts"],
+      "@relay/protocol": ["packages/protocol/src/index.ts"],
+      "@relay/scheduler": ["packages/scheduler/src/index.ts"],
+      "@relay/openai-compat": ["packages/openai-compat/src/index.ts"],
+      "@relay/sdk": ["packages/sdk/src/index.ts"],
+      "@relay/testkit": ["packages/testkit/src/index.ts"]
+    }
+  },
+  "include": ["apps/**/*.ts", "packages/**/*.ts", "scripts/**/*.ts", "tooling/**/*.ts"],
+  "exclude": ["dist", "node_modules"]
+}

@@ -1,0 +1,11 @@
+{
+  "name": "@relay/testkit",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": "./src/index.ts",
+  "dependencies": {
+    "@relay/db": "workspace:*",
+    "@relay/protocol": "workspace:*"
+  }
+}
