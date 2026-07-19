@@ -98,7 +98,7 @@ async function connectOnce(
       console.log(
         JSON.stringify({ level: "info", event: "host.connected", donor_id: config.donorId }),
       );
-      send({ type: "host.hello", agentVersion: "0.1.0", donorName: config.donorName });
+      send({ type: "host.hello", agentVersion: "0.1.1", donorName: config.donorName });
       send({ type: "host.capabilities", capabilities });
       send({ type: "host.ready" });
     });

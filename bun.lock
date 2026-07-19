@@ -14,7 +14,7 @@
     },
     "apps/api": {
       "name": "@relay/api",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "dependencies": {
         "@relay/config": "workspace:*",
         "@relay/db": "workspace:*",
@@ -28,7 +28,7 @@
     },
     "apps/host": {
       "name": "@relay/host",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "bin": {
         "relay-host": "src/index.ts",
       },
@@ -41,18 +41,18 @@
     },
     "apps/web": {
       "name": "@relay/web",
-      "version": "0.1.0",
+      "version": "0.1.1",
     },
     "packages/config": {
       "name": "@relay/config",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "dependencies": {
         "zod": "^4.0.0",
       },
     },
     "packages/db": {
       "name": "@relay/db",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "dependencies": {
         "@relay/protocol": "workspace:*",
         "@relay/scheduler": "workspace:*",
@@ -61,7 +61,7 @@
     },
     "packages/openai-compat": {
       "name": "@relay/openai-compat",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "dependencies": {
         "@relay/protocol": "workspace:*",
         "zod": "^4.0.0",
@@ -69,28 +69,28 @@
     },
     "packages/protocol": {
       "name": "@relay/protocol",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "dependencies": {
         "zod": "^4.0.0",
       },
     },
     "packages/scheduler": {
       "name": "@relay/scheduler",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "dependencies": {
         "@relay/protocol": "workspace:*",
       },
     },
     "packages/sdk": {
       "name": "@relay/sdk",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "dependencies": {
         "@relay/protocol": "workspace:*",
       },
     },
     "packages/testkit": {
       "name": "@relay/testkit",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "dependencies": {
         "@relay/db": "workspace:*",
         "@relay/protocol": "workspace:*",
