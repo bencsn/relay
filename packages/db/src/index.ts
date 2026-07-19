@@ -415,8 +415,8 @@ export async function claimNextJob(
 ): Promise<LeaseOffer | null> {
   if (!policyAllowsNow(capabilities.policy)) return null;
   return sql.begin(async (tx) => {
-    const [eligible] = await tx`
-      SELECT 1 FROM donors d JOIN accounts a ON a.id = d.account_id
+    const [eligible] = await tx<{ account_id: string }[]>`
+      SELECT d.account_id FROM donors d JOIN accounts a ON a.id = d.account_id
       WHERE d.id = ${donorId} AND d.status = 'online' AND a.status = 'active'
     `;
     if (!eligible) return null;
@@ -432,6 +432,7 @@ export async function claimNextJob(
       SELECT j.* FROM jobs j JOIN accounts owner ON owner.id = j.account_id
       WHERE j.status IN ('queued', 'retrying') AND j.max_wait_at > now()
         AND owner.status = 'active'
+        AND (${!capabilities.policy.accountOnly} OR j.account_id = ${eligible.account_id})
         AND (SELECT count(*) FROM jobs active WHERE active.account_id = j.account_id AND active.status IN ('leased', 'running')) < ${maxConsumerActiveLeases}
       ORDER BY j.created_at ASC, j.id ASC
       FOR UPDATE SKIP LOCKED LIMIT 50
@@ -682,11 +683,20 @@ export async function purgeExpiredResults(sql: Database) {
   return result.count;
 }
 
-export async function countCompatibleHosts(sql: Database, request: CanonicalRequest) {
-  const donors = await sql<{ capabilities: HostCapabilities }[]>`
-    SELECT capabilities FROM donors WHERE status = 'online' AND last_seen_at > now() - interval '20 seconds' AND capabilities IS NOT NULL
+export async function countCompatibleHosts(
+  sql: Database,
+  request: CanonicalRequest,
+  accountId: string,
+) {
+  const donors = await sql<{ account_id: string; capabilities: HostCapabilities }[]>`
+    SELECT account_id, capabilities FROM donors
+    WHERE status = 'online' AND last_seen_at > now() - interval '20 seconds' AND capabilities IS NOT NULL
   `;
-  return donors.filter((donor) => matchRequest(request, donor.capabilities).compatible).length;
+  return donors.filter(
+    (donor) =>
+      (!donor.capabilities.policy.accountOnly || donor.account_id === accountId) &&
+      matchRequest(request, donor.capabilities).compatible,
+  ).length;
 }
 
 export interface WebhookDeliveryRow {

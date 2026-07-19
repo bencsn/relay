@@ -139,6 +139,8 @@ Build in this order:
 
 The MVP must not depend on the later stages to be useful.
 
+> **Post-MVP experimental extension:** the implementation now contains an opt-in, account-only `codex-exec` donor adapter for private local evaluation. It does not change the public-pool MVP scope below. Public or cross-account subscription sharing remains unsupported; see `docs/codex-provider.md`.
+
 ## 1. MVP decision
 
 Relay's first release is a consumer-agnostic inference-sharing API.

@@ -140,7 +140,7 @@ export function createApp(deps: AppDependencies) {
   app.get("/healthz", (c) => c.json({ status: "ok" }));
   app.get("/readyz", async (c) => {
     await deps.sql`SELECT 1`;
-    return c.json({ status: "ready" });
+    return c.json({ status: "ready", features: { account_only_scheduling: true } });
   });
   app.get("/openapi.json", (c) => c.json(openapi));
   app.get("/metrics", async (c) => {
@@ -412,7 +412,7 @@ export function createApp(deps: AppDependencies) {
     const compatible =
       job.deleted_at || !job.canonical_request
         ? 0
-        : await countCompatibleHosts(deps.sql, job.canonical_request);
+        : await countCompatibleHosts(deps.sql, job.canonical_request, auth.accountId);
     return c.json({
       id: job.id,
       status: job.status,

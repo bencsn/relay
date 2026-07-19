@@ -132,6 +132,7 @@ export function attachHostWebSocket(app: Hono<any>, deps: Dependencies) {
                   type: "host.accepted",
                   sessionId: message.sessionId,
                   heartbeatSeconds: deps.config.HEARTBEAT_SECONDS,
+                  features: { accountOnlyScheduling: true },
                 });
                 break;
               case "host.capabilities":

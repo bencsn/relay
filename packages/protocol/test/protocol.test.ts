@@ -4,6 +4,7 @@ import {
   hostMessageSchema,
   hostPolicySchema,
   responsesRequestSchema,
+  serverMessageSchema,
 } from "../src/index.ts";
 
 describe("external protocol validation", () => {
@@ -61,5 +62,15 @@ describe("external protocol validation", () => {
         type: "host.ready",
       }),
     ).toThrow();
+  });
+
+  test("fails closed when an older Relay API omits account-only scheduling support", () => {
+    const accepted = serverMessageSchema.parse({
+      type: "host.accepted",
+      sessionId: crypto.randomUUID(),
+      heartbeatSeconds: 5,
+    });
+    if (accepted.type !== "host.accepted") throw new Error("Expected accepted message");
+    expect(accepted.features.accountOnlyScheduling).toBeFalse();
   });
 });
