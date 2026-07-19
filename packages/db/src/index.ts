@@ -46,6 +46,9 @@ export async function migrate(sql: Database, migrationsDirectory?: string) {
 }
 
 function digest(secret: string, value: string) {
+  // API and device tokens contain at least 144 bits of CSPRNG entropy; this is a
+  // keyed lookup digest, not a human password hash, so a fast HMAC is intentional.
+  // codeql[js/insufficient-password-hash]
   return createHmac("sha256", secret).update(value).digest("hex");
 }
 

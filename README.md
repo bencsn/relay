@@ -61,10 +61,10 @@ Requirements: Bun 1.3.14+, Docker, and Docker Compose.
 3. Create a consumer key and donor pairing code:
 
    ```bash
-   bun run bootstrap
+   bun run bootstrap -- --show-secret
    ```
 
-   Save the returned credentials in a password manager. Relay stores only HMAC digests of API/device credentials.
+   Run this only in a private interactive terminal, then save the one-time credentials directly in a password manager. The command refuses non-interactive output to avoid accidental CI/log capture. Relay stores only HMAC digests of API/device credentials.
 
 4. For a dependency-free local smoke test, start the prompt-free mock backend:
 
