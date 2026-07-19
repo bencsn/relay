@@ -8,7 +8,12 @@ import {
 import { policyAllowsNow, quotaAllows } from "@relay/scheduler";
 import { type HostConfig, localStateBytes, readConfig, writeConfig } from "./config.ts";
 import { getCredential } from "./credentials.ts";
-import { OpenAICompatibleAdapter, ProviderError } from "./provider.ts";
+import {
+  createInferenceAdapter,
+  type InferenceAdapter,
+  ProviderError,
+  providerModel,
+} from "./provider.ts";
 import { addUsage, readUsage } from "./usage.ts";
 
 interface ActiveAttempt {
@@ -64,20 +69,24 @@ async function connectOnce(
 ) {
   const config = await readConfig();
   const providerKey = await getCredential("provider-api-key");
-  const adapter = new OpenAICompatibleAdapter(
-    config.provider.baseUrl,
-    config.provider.model,
-    providerKey,
-    config.provider.credentialHeader,
-  );
+  const adapter = createInferenceAdapter(config.provider, {
+    credential: providerKey,
+    maxOutputBytes: config.policy.maxResponseBytes,
+    maxRssBytes: config.policy.maxRssBytes,
+  });
+  const advertisedProviderModel = providerModel(config.provider);
   const capabilities: HostCapabilities = {
     protocolVersion: 1,
     models: config.virtualModels.map((virtualModel) => ({
       virtualModel,
-      providerModel: config.provider.model,
+      providerModel: advertisedProviderModel,
       contextWindow: config.policy.maxContextTokens,
       maxOutputTokens: config.policy.maxOutputTokens,
-      features: { chatCompletions: true, responses: true, tools: config.allowTools },
+      features: {
+        chatCompletions: true,
+        responses: true,
+        tools: config.provider.type === "openai-compatible" && config.allowTools,
+      },
     })),
     policy: config.policy,
   };
@@ -99,14 +108,18 @@ async function connectOnce(
         JSON.stringify({ level: "info", event: "host.connected", donor_id: config.donorId }),
       );
       send({ type: "host.hello", agentVersion: "0.1.1", donorName: config.donorName });
-      send({ type: "host.capabilities", capabilities });
-      send({ type: "host.ready" });
     });
     socket.addEventListener("message", (event) => {
       void (async () => {
         const message = serverMessageSchema.parse(JSON.parse(String(event.data)));
         if (message.type === "host.accepted") {
           heartbeatSeconds = message.heartbeatSeconds;
+          if (config.policy.accountOnly && !message.features.accountOnlyScheduling) {
+            socket.close(1008, "account-only scheduling is required");
+            throw new Error("Relay API does not support required account-only scheduling.");
+          }
+          send({ type: "host.capabilities", capabilities });
+          send({ type: "host.ready" });
           return;
         }
         if (message.type === "lease.cancel") {
@@ -142,7 +155,7 @@ async function connectOnce(
 
 async function handleOffer(
   offer: Extract<ReturnType<typeof serverMessageSchema.parse>, { type: "lease.offer" }>,
-  adapter: OpenAICompatibleAdapter,
+  adapter: InferenceAdapter,
   send: (message: any) => void,
   active: Map<string, ActiveAttempt>,
   heartbeatSeconds: number,

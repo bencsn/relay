@@ -152,6 +152,7 @@ export const canonicalResultSchema = z.object({
 export type CanonicalResult = z.infer<typeof canonicalResultSchema>;
 
 export const hostPolicySchema = z.object({
+  accountOnly: z.boolean().default(false),
   maxConcurrency: z.number().int().min(1).max(32).default(1),
   maxRequestBytes: z.number().int().min(1024).max(1_048_576).default(262_144),
   maxResponseBytes: z.number().int().min(1024).max(4_194_304).default(1_048_576),
@@ -263,6 +264,9 @@ export const serverMessageSchema = z.discriminatedUnion("type", [
     type: z.literal("host.accepted"),
     sessionId: z.string().uuid(),
     heartbeatSeconds: z.number().int(),
+    features: z
+      .object({ accountOnlyScheduling: z.boolean() })
+      .default({ accountOnlyScheduling: false }),
   }),
   z.object({
     type: z.literal("lease.offer"),

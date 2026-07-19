@@ -33,6 +33,7 @@ Untrusted or potentially malicious:
 - Non-root/read-only container, dropped Linux capabilities, SBOM/provenance, secret/dependency/static analysis workflows.
 - Bearer-protected, prompt-free Prometheus metrics for durable states, queue age, donor state, and webhook delivery state.
 - Account suspension disables API authentication, stops that account's donors from receiving new work, and expires their active leases (`bun run account:status -- --account-id ... --status suspended`).
+- The experimental Codex provider is forced to same-account jobs, concurrency one, no consumer tools, isolated file-based Codex auth, an empty per-job workspace, minimum-read/no-write/no-command-network permissions, no approvals, bounded subprocess output/time/process-tree RSS, and recursive local-state accounting.
 
 ## Production requirements outside the codebase
 
@@ -52,6 +53,7 @@ Untrusted or potentially malicious:
 - No multi-region/high-availability control plane is included.
 - Streaming is buffered, not live.
 - Responses/Codex compatibility is a limited experimental subset.
+- The Codex donor adapter runs an agent rather than a raw inference API. It is private/account-only, can consume usage more than once on retries, and is not approved for public subscription sharing. Native Windows is disabled until equivalent process resource enforcement is available.
 - Release artifacts have signed GitHub provenance; Apple notarization and Windows Authenticode require project-owned certificates before broad native distribution.
 - The fallback donor credential file is less desirable than an OS keychain; `doctor`/`status` report the active backend.
 

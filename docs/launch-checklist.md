@@ -26,9 +26,10 @@ Do not mark Relay production-ready or submit it to Product Hunt until every laun
 - Best-effort donated inference, not an SLA.
 - Public donors process plaintext and may inspect it.
 - No confidential/private/regulated workloads.
-- No consumer code execution or repository transfer.
+- No consumer-supplied code execution or repository transfer. The optional account-only Codex experiment runs only model-selected actions inside its documented empty least-privilege sandbox and is not public-pool capacity.
 - Buffered streaming, not live token failover.
 - Local/open or explicitly permitted provider capacity only.
+- Codex CLI donor mode remains private, account-only, explicitly acknowledged, and excluded from public subscription-capacity claims.
 - Responses/Codex compatibility is experimental unless the launch build has a dated proof.
 
 ## Recommended staged rollout

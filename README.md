@@ -15,6 +15,7 @@ Consumers submit jobs without choosing a machine. Donors run an outbound-only ho
 - Authenticated outbound donor WebSocket with monotonic message sequences.
 - Capability matching, FIFO queueing, consumer fair-share caps, leases, heartbeats, retries, and late-result rejection.
 - Host-owned schedules, concurrency, request/response/context/output/time/daily/RSS limits.
+- Explicitly experimental, account-only Codex CLI provider with isolated auth, least-privilege permission profiles, and process bounds.
 - One-time donor pairing, hashed API/device credentials, API key scopes, rotation, and immediate revocation.
 - SSRF-resistant HTTPS webhooks with DNS validation, pinned delivery address, HMAC signatures, and 24-hour retry state.
 - Non-root, read-only API container; PostgreSQL is the only durable dependency.
@@ -35,6 +36,7 @@ consumer / OpenAI SDK
          | outbound WSS        attempts, webhook state
          |
    relay-host ------ local OpenAI-compatible model server
+         \\-------- isolated Codex CLI (private account-only experiment)
 ```
 
 The consumer never receives donor identity or credentials. The donor receives the inference payload and opaque lease identifiers, but not the consumer API key, account identity, email, IP, or billing data.
@@ -47,10 +49,10 @@ Requirements: Bun 1.3.14+, Docker, and Docker Compose.
 
    ```bash
    cp .env.example .env
-   openssl rand -base64 48
+   for i in 1 2 3 4 5; do openssl rand -hex 32; done
    ```
 
-   Put a different generated value in `POSTGRES_PASSWORD`, `KEY_PEPPER`, `DEVICE_TOKEN_PEPPER`, `WEBHOOK_SIGNING_SECRET`, and `METRICS_BEARER_TOKEN`. Never commit `.env`.
+   Use the first value for both `POSTGRES_PASSWORD` and the password inside `DATABASE_URL`. Use each remaining value once for `KEY_PEPPER`, `DEVICE_TOKEN_PEPPER`, `WEBHOOK_SIGNING_SECRET`, and `METRICS_BEARER_TOKEN`. Hex keeps the database URL safe without additional encoding. Never commit `.env`.
 
 2. Start PostgreSQL and the API:
 
@@ -105,6 +107,8 @@ Requirements: Bun 1.3.14+, Docker, and Docker Compose.
    ```
 
 See [docs/api.md](docs/api.md) for polling, SSE, webhooks, key management, Chat Completions, Responses, and SDK usage.
+
+To privately test your own Codex CLI as the donor backend, follow [docs/codex-provider.md](docs/codex-provider.md). This mode is account-only and experimental; it is not supported as public subscription capacity.
 
 ## Donor install
 

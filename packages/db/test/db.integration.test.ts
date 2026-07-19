@@ -265,4 +265,30 @@ integration("PostgreSQL durability and failover", () => {
     expect(await setAccountStatus(sql, consumer.accountId, "suspended")).toBeTrue();
     expect(await donor.claim()).toBeNull();
   });
+
+  test("keeps account-only donor capacity inside the pairing account", async () => {
+    const otherAccount = await setup();
+    const donorAccount = await setup();
+    const otherJob = await createJob(sql, {
+      accountId: otherAccount.accountId,
+      apiKeyId: otherAccount.id,
+      request,
+      requestBytes: 128,
+      maxWaitSeconds: 3600,
+    });
+    const ownJob = await createJob(sql, {
+      accountId: donorAccount.accountId,
+      apiKeyId: donorAccount.id,
+      request,
+      requestBytes: 128,
+      maxWaitSeconds: 3600,
+    });
+    const restrictedCapabilities = structuredClone(dbCapabilities);
+    restrictedCapabilities.policy.accountOnly = true;
+    const donor = new MockDonor(sql, donorAccount.donor.donorId, restrictedCapabilities);
+    await donor.connect();
+    const offer = await donor.claim();
+    expect(offer?.jobId).toBe(ownJob.job.id);
+    expect((await getJob(sql, otherAccount.accountId, otherJob.job.id))?.status).toBe("queued");
+  });
 });

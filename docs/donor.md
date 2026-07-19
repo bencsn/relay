@@ -1,12 +1,16 @@
 # Donor guide
 
-The host agent opens one outbound TLS WebSocket to Relay and calls only the locally configured OpenAI-compatible provider URL. It opens no public listener and never executes consumer code, tools, shell commands, URLs, or files.
+The host agent opens one outbound TLS WebSocket to Relay and normally calls only the locally configured OpenAI-compatible provider URL. It opens no public listener and never executes consumer-supplied code, tools, URLs, repositories, or files.
+
+An explicitly enabled, account-only [Codex provider experiment](codex-provider.md) can start `codex exec` for text prompts. It uses an empty workspace and a least-privilege permission profile that denies writes, command network access, approvals, and reads outside minimum runtime paths. It is not public-pool capacity.
 
 ## Safe provider choices
 
 Use a local/open model server or an upstream source whose terms explicitly permit this use. Do not donate personal subscription access unless the provider has explicitly approved sharing.
 
 Supported backends include Ollama, LM Studio, llama.cpp servers, and other OpenAI-compatible chat endpoints. Relay does not load models or change provider RAM/VRAM settings.
+
+The Codex CLI adapter is a private experiment, not a generally safe provider choice. OpenAI recommends API keys for programmatic automation and says not to expose Codex execution in untrusted or public environments. Relay therefore enforces same-account scheduling for this adapter and requires explicit risk acknowledgement.
 
 ## Setup
 
@@ -35,6 +39,8 @@ relay-host setup
 relay-host start
 relay-host doctor
 relay-host status
+relay-host codex-login
+relay-host codex-logout
 relay-host pause
 relay-host resume
 relay-host logout
@@ -47,6 +53,7 @@ relay-host logout
 Defaults:
 
 ```yaml
+accountOnly: false
 maxConcurrency: 1
 maxRequestBytes: 262144
 maxResponseBytes: 1048576
@@ -58,6 +65,8 @@ maxTokensPerDay: 500000
 maxRssBytes: 536870912
 maxTemporaryDiskBytes: 268435456
 ```
+
+The Codex experiment forces `accountOnly: true`, concurrency `1`, a 120-second job limit, 25 jobs/day, and 100,000 tokens/day unless the donor selects stricter values. It cannot be configured for cross-account scheduling.
 
 Schedule windows use an IANA timezone. An empty window list means always available. Effective limits are the minimum of the consumer request, Relay platform, donor policy, and backend capability. Remote messages cannot raise local limits.
 

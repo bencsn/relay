@@ -23,6 +23,7 @@ export function mockCapabilities(overrides: Partial<HostCapabilities> = {}): Hos
       },
     ],
     policy: {
+      accountOnly: false,
       maxConcurrency: 1,
       maxRequestBytes: 262_144,
       maxResponseBytes: 1_048_576,
