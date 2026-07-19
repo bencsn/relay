@@ -2,7 +2,7 @@ export const openapi = {
   openapi: "3.1.0",
   info: {
     title: "Relay API",
-    version: "0.1.0",
+    version: "0.1.1",
     description: "Durable donated inference with OpenAI-compatible synchronous surfaces.",
   },
   servers: [{ url: "/" }],
