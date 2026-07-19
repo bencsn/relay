@@ -16,7 +16,7 @@ REQUIRE_HTTPS=true
 TRUST_PROXY_HEADERS=true   # only behind a trusted, overwriting proxy
 ```
 
-Generate independent secrets using a cryptographic generator. Never reuse the database password, API-key pepper, device-token pepper, or webhook signing secret. Avoid `RELAY_BOOTSTRAP_API_KEY` in normal production; create accounts with `bun run key:create -- --name <name>` from an audited administrative environment.
+Generate independent secrets using a cryptographic generator. Never reuse the database password, API-key pepper, device-token pepper, or webhook signing secret. Avoid `RELAY_BOOTSTRAP_API_KEY` in normal production; create accounts with `bun run key:create -- --name <name> --show-secret` from an audited, private interactive terminal and transfer the one-time output directly to a password manager. Credential-issuing scripts refuse non-interactive output so CI cannot capture raw keys accidentally.
 
 ## PostgreSQL
 
