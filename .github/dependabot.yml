@@ -7,6 +7,12 @@ updates:
     groups:
       runtime-dependencies:
         dependency-type: production
+    ignore:
+      # Compiler majors can require source migrations; review them as planned work.
+      # Dependabot security updates remain enabled independently of version updates.
+      - dependency-name: typescript
+        update-types:
+          - version-update:semver-major
   - package-ecosystem: docker
     directory: /
     schedule:
