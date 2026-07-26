@@ -41,7 +41,7 @@
     "@biomejs/biome": "^2.0.0",
     "@types/bun": "latest",
     "@types/node": "latest",
-    "openai": "6.48.0",
+    "openai": "6.49.0",
     "typescript": "^5.8.0"
   }
 }
