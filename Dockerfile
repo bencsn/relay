@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:1.7
-FROM oven/bun:1.3.14 AS build
+FROM oven/bun:1.4.2 AS build
 WORKDIR /app
 COPY package.json bun.lock tsconfig.json bunfig.toml ./
 COPY apps apps
@@ -7,7 +7,7 @@ COPY packages packages
 RUN bun install --frozen-lockfile
 RUN bun build apps/api/src/index.ts --target=bun --outfile=dist/relay-api.js
 
-FROM oven/bun:1.3.14-slim AS runtime
+FROM oven/bun:1.4.2-slim AS runtime
 ENV NODE_ENV=production
 WORKDIR /app
 COPY --from=build --chown=bun:bun /app/dist/relay-api.js ./relay-api.js
